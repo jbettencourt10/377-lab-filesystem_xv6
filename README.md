@@ -132,6 +132,7 @@ From the above files, and the files listed on gradescope, we believe that lookin
 
 Here, we provide a snippet for you to implement in xv6 to print free and allocated blocks in the file system. The final result should look like something resembling the following:
 
+```
 Free blocks:
 728  729  730  731  732  733  734  735  736  737  738  739  740  741  742  743  
 744  745  746  747  748  749  750  751  752  753  754  755  756  757  758  759  
@@ -147,7 +148,7 @@ Alocated blocks:
 704  705  706  707  708  709  710  711  712  713  714  715  716  717  718  719  
 720  721  722  723  724  725  726  727  
 Total allocated blocks = 728
-
+```
 
 
 TODO: INCLUDE SYSTEM CALL ADDITION INSTRUCTIONS
