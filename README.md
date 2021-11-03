@@ -172,7 +172,7 @@ pfs()
       m = 1 << (bi % 8);
       ++countt;
       if((bp->data[bi/8] & m) == 0){  // Is block free?
-        !!!YOU DO THIS!!!
+        //!!!YOU DO THIS!!!
         // What should we do if a block is free?
       }
       bn++;
@@ -184,7 +184,7 @@ pfs()
   cprintf("\nAlocated blocks:\n");
   bn = 0;
   
-  !!!!!!YOU DO THIS!!!!!!!!!
+  //!!!!!!YOU DO THIS!!!!!!!!!
 }
 ```
 
