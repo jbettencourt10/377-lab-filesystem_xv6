@@ -32,70 +32,98 @@ Xv6 is a small operating system designed by MIT for students to learn how operat
 
 To run xv6, first use the 'make' command in the directory. Then, after completion, use the 'make qemu-nox' command in the same directory. A shell will appear, and you will be using the Xv6 OS.
 
-proc.c
+
+A snippet from proc.c
 ```c++
-//PAGEBREAK: 42
-// Per-CPU process scheduler.
-// Each CPU calls scheduler() after setting itself up.
-// Scheduler never returns.  It loops, doing:
-//  - choose a process to run
-//  - swtch to start running that process
-//  - eventually that process transfers control
-//      via swtch back to the scheduler.
-void
-scheduler(void)
-{
-  struct proc *p;
-  struct cpu *c = mycpu();
-  c->proc = 0;
-
-  for(;;){
-    // Enable interrupts on this processor.
-    sti();
-
-    // Loop over process table looking for process to run.
-    acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
-        continue;
-
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
+        bp->data[bi/8] |= m;  // Mark block in use.
+        log_write(bp);
+        brelse(bp);
+        bzero(dev, b + bi);
+        return b + bi;
+      }
     }
-    release(&ptable.lock);
-
+    brelse(bp);
   }
+  panic("balloc: out of blocks");
+}
+
+// Free a disk block.
+static void
+bfree(int dev, uint b)
+{
+  struct buf *bp;
+  int bi, m;
+
+  bp = bread(dev, BBLOCK(b, sb));
+  bi = b % BPB;
+  m = 1 << (bi % 8);
+  if((bp->data[bi/8] & m) == 0)
+    panic("freeing free block");
+  bp->data[bi/8] &= ~m;
+  log_write(bp);
+  brelse(bp);
 }
 ```
 
-trap.c
+fs.h
 ```c++
-  // Force process exit if it has been killed and is in user space.
-  // (If it is still executing in the kernel, let it keep running
-  // until it gets to the regular system call return.)
-  if(myproc() && myproc()->killed && (tf->cs&3) == DPL_USER)
-    exit();
+// On-disk file system format.
+// Both the kernel and user programs use this header file.
 
-  // Force process to give up CPU on clock tick.
-  // If interrupts were on while locks held, would need to check nlock.
-  if(myproc() && myproc()->state == RUNNING &&
-     tf->trapno == T_IRQ0+IRQ_TIMER)
-    yield();
 
-  // Check if the process has been killed since we yielded
-  if(myproc() && myproc()->killed && (tf->cs&3) == DPL_USER)
-    exit();
+#define ROOTINO 1  // root i-number
+#define BSIZE 512  // block size
+
+// Disk layout:
+// [ boot block | super block | log | inode blocks |
+//                                          free bit map | data blocks]
+//
+// mkfs computes the super block and builds an initial file system. The
+// super block describes the disk layout:
+struct superblock {
+  uint size;         // Size of file system image (blocks)
+  uint nblocks;      // Number of data blocks
+  uint ninodes;      // Number of inodes.
+  uint nlog;         // Number of log blocks
+  uint logstart;     // Block number of first log block
+  uint inodestart;   // Block number of first inode block
+  uint bmapstart;    // Block number of first free map block
+};
+
+#define NDIRECT 12
+#define NINDIRECT (BSIZE / sizeof(uint))
+#define MAXFILE (NDIRECT + NINDIRECT)
+
+// On-disk inode structure
+struct dinode {
+  short type;           // File type
+  short major;          // Major device number (T_DEV only)
+  short minor;          // Minor device number (T_DEV only)
+  short nlink;          // Number of links to inode in file system
+  uint size;            // Size of file (bytes)
+  uint addrs[NDIRECT+1];   // Data block addresses
+};
+
+// Inodes per block.
+#define IPB           (BSIZE / sizeof(struct dinode))
+
+// Block containing inode i
+#define IBLOCK(i, sb)     ((i) / IPB + sb.inodestart)
+
+// Bitmap bits per block
+#define BPB           (BSIZE*8)
+
+// Block of free map containing bit for block b
+#define BBLOCK(b, sb) (b/BPB + sb.bmapstart)
+
+// Directory is a file containing a sequence of dirent structures.
+#define DIRSIZ 14
+
+struct dirent {
+  ushort inum;
+  char name[DIRSIZ];
+};
+
 ```
 
 From the above files, and the files listed on gradescope, we believe that looking through the source code should be a sufficient amount of information to answer the questions on Gradescope. However, there exists a wide range of documentation about Xv6 on the internet, so feel free to look for that if you find it necessary. A useful page is https://github.com/YehudaShapira/xv6-explained/blob/master/Explanations.md.
