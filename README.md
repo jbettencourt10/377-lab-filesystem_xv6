@@ -1,15 +1,15 @@
-# COMPSCI 377 LAB: GDB & Xv6
+# COMPSCI 377 LAB: Xv6 Filesystem
 
 ## Purpose
 
-This lab is designed to familiarize students with the Xv6 learning operating system and additionally familiarize students with the GDB debugging module. Please make sure that all of your answers to questions in these labs come from work done on the Edlab environment – otherwise, they may be inconsistent results and will not receive points.
+This lab is designed to familiarize students with the Xv6 learning operating system and more specifically familiarize students with the Xv6 filesytem. Please make sure that all of your answers to questions in these labs come from work done on the Edlab environment – otherwise, they may be inconsistent results and will not receive points.
 
 Please submit your answers to this lab on Gradescope in the assignment marked “Lab #3’. All answers are due by the time specified on Gradescope. The TA present in your lab will do a brief explanation of the various parts of this lab, but you are expected to answer all questions by yourself. Please raise your hand if you have any questions during the lab section – TAs will be notified you are asking a question. Questions and Parts have a number of points marked next to them to signify their weight in this lab’s final grade. Labs are weighted equally, regardless of their total points.
 
 Once you have logged in to Edlab, you can clone this lab repo using
 
 ```bash
-git clone https://github.com/jbettencourt10/gdb_xv6.git
+git clone https://github.com/jbettencourt10/377-lab-filesystem_xv6.git
 ```
 
 Then, clone the Xv6 repo into the 377-lab-gdb_xv6 directory using
@@ -24,11 +24,11 @@ Finally, you can use `cd` to open the directory you just cloned:
 cd 377-lab-gdb_xv6
 ```
 
-Both folders include Makefiles that allow you to locally compile the lab binary and Xv6 OS and run all the sample code listed in this tutorial. You can compile them by running `make`. Feel free to modify the source files yourself, after making changes you can run `make` again to build new binaries from your modified files. You can also use `make clean` to remove all the built files, this command is usually used when something went wrong during the compilation so that you can start fresh.
+The xv6 OS includes a Makefile that allow you to locally compile the OS run all the sample code listed in this tutorial. You can compile them by running `make`. Feel free to modify the source files yourself, after making changes you can run `make` again to build new binaries from your modified files. You can also use `make clean` to remove all the built files, this command is usually used when something went wrong during the compilation so that you can start fresh.
 
 ## Part 1: Xv6 (5 Points)
 
-Xv6 is a small operating system designed by MIT for students to learn how operating systems work. It includes several features we have or will learn about, like a scheduler, processes, file system, and system calls. For the sake of this lab, we will be investigating how Xv6 schedules processes, handles I/O, and makes systems calls by looking through the source code available to us.
+Xv6 is a small operating system designed by MIT for students to learn how operating systems work. It includes several features we have or will learn about, like a scheduler, processes, file system, and system calls. For the sake of this lab, we will be investigating how Xv6 implements an ordinary filesystem by looking through the source code available to us.
 
 To run xv6, first use the 'make' command in the directory. Then, after completion, use the 'make qemu-nox' command in the same directory. A shell will appear, and you will be using the Xv6 OS.
 
