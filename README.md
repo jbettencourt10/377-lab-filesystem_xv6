@@ -166,7 +166,7 @@ Total allocated blocks = 728
 ```
 
 
-It is imperative that you understand how the filesystem works in xv6 before attempting this, so be very clear with what is written in `fs.c` and `fs.h` before attempting a direct implementation.
+It is imperative that you understand how the filesystem works in xv6 before attempting this, so be very clear with what is written in `fs.c` and `fs.h` before attempting a direct implementation. 
 
 Print File System code snippet
 ```c++
@@ -201,6 +201,6 @@ pfs()
 }
 ```
 
-Our hope is that you will finish the implementation wherever you see "YOU DO THIS" and your output will match the output listed above. Remember to ask your TA for help if you find that you need help during the lab with your implementation.
+Our hope is that you will finish the implementation wherever you see "YOU DO THIS" and your output will match the output listed above. Essentially, copy this snippet into `fs.c` and finish the implementation. Remember to ask your TA for help if you find that you need help during the lab with your implementation. 
 
 ## Please submit your answers to these questions on gradescope!
