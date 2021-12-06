@@ -168,8 +168,6 @@ Total allocated blocks = 728
 
 It is imperative that you understand how the filesystem works in xv6 before attempting this, so be very clear with what is written in `fs.c` and `fs.h` before attempting a direct implementation.
 
-TODO: INCLUDE SYSTEM CALL ADDITION INSTRUCTIONS
-
 Print File System code snippet
 ```c++
 int
